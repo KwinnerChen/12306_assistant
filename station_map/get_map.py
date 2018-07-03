@@ -21,7 +21,7 @@ class StationMap(dict, object):
     @classmethod
     def get_dict(cls):
         '''该方法返回一个对象本身的实例'''
-        
+
         return cls()
 
     def __load_dict(self):  # 由本地文件加载到对象本身
@@ -64,21 +64,7 @@ class StationMap(dict, object):
                 self.__string_paser(string)
                 self.__storage_map()
                 return self.get(n)
-        # try:
-        #     r = self.get(n)
-        #     if r:
-        #         return r
-        #     else:
-        #         raise KeyError
-        # except KeyError:
-        #     if os.path.exists(self.file_path) and os.path.isfile(self.file_path) and os.path.getsize(self.file_path) > 0:
-        #         self.__load_dict()    
-        #         return self.get(n)
-        #     else:
-        #         string = self.__refresh_map()
-        #         self.__string_paser(string)
-        #         self.__storage_map()
-        #         return self.get(n)
+                
 if __name__ == '__main__':
     map_dic = StationMap()
     print(map_dic['北京'])
