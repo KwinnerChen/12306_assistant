@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 # author: Kwinner Chen
 
-import requests, json
+import requests 
+import json
 
 url = 'https://kyfw.12306.cn/otn/leftTicket/query'
 
