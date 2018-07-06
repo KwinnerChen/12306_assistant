@@ -28,9 +28,9 @@ def page_dict(dic):  # 余票数据解析
     for s in l:
         l = s.split('|')     
         if l[3][0] in ('K', 'Z', 'T'):
-            dic_info[l[3]] = dict(软卧=l[23], 硬卧=l[28], 硬座=l[29], 无座=l[26])
+            dic_info[l[3]] = dict(secretStr=l[0], tain_nun=l[2], train_location=l[15], leftTicket=l[12], 软卧=l[23], 硬卧=l[28], 硬座=l[29], 无座=l[26])
         if l[3][0] in ('D', 'G'):
-            dic_info[l[3]] = dict(特等商务座=l[32], 一等座=l[31], 二等座=l[30], 无座=l[26]) 
+            dic_info[l[3]] = dict(secretStr=l[0], tain_num=l[2], train_location=l[15], leftTicket=l[12], 特等商务座=l[32], 一等座=l[31], 二等座=l[30], 无座=l[26]) 
     return dic_info
 
 def leftTicket_info(data, from_station, to_station):
@@ -48,5 +48,5 @@ def leftTicket_info(data, from_station, to_station):
     
 
 if __name__ == '__main__':
-    dic = leftTicket_info('2018-07-04', 'BJP', 'SJP')
-    print(dic)
+    dic = leftTicket_info('2018-07-08', 'BJP', 'SJP')
+    print(len(dic))
