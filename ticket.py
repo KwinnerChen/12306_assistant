@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # author: Kwinner Chen
 
-# from station_map import StationMap
+from station_map import StationMap
 # from get_leftticket_info import leftTicket_info
 from datetime import datetime
 import requests
@@ -412,7 +412,7 @@ class BookingSimulator(object):
                 print('__confirmSingleForQueue成功！')
         except Exception as e:
             print('__confirmSingleForQueue出错：%s' % e)
-            
+
 
     def queryOrderWaitTime(self, cookie, token):  # 该方法需要循环访问，直至waitTime=-1，waitCount=0,orderld!='null'为止
         '''参数key_check_isChange全部由0-9，A-F组成，应该是一组十六进制字符串, 之前的js函数应该有一个toString()函数
