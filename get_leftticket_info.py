@@ -7,9 +7,9 @@ import json
 
 url = 'https://kyfw.12306.cn/otn/leftTicket/query'
 
-def get_info_dict(data, from_station, to_station):  # 获取余票数据
+def get_info_dict(date, from_station, to_station):  # 获取余票数据
     payload = {
-        'leftTicketDTO.train_date':'%s' % data,
+        'leftTicketDTO.train_date':'%s' % date,
         'leftTicketDTO.from_station':'%s' % from_station,
         'leftTicketDTO.to_station':'%s' % to_station,
         'purpose_codes':'ADULT',
@@ -33,7 +33,7 @@ def page_dict(dic):  # 余票数据解析
             dic_info[l[3]] = dict(secretStr=l[0], tain_num=l[2], train_location=l[15], leftTicket=l[12], 特等商务座=l[32], 一等座=l[31], 二等座=l[30], 无座=l[26]) 
     return dic_info
 
-def leftTicket_info(data, from_station, to_station):
+def leftTicket_info(date, from_station, to_station):
     '''
        获取指定日期，车站间的车票的余票信息，返回值为python字典。
        参数说明：
@@ -42,11 +42,13 @@ def leftTicket_info(data, from_station, to_station):
        to_station: 与from_station格式相同。
     '''
 
-    dic = get_info_dict(data, from_station, to_station)
+    dic = get_info_dict(date, from_station, to_station)
     info = page_dict(dic)
     return info
     
 
 if __name__ == '__main__':
-    dic = leftTicket_info('2018-07-08', 'BJP', 'SJP')
+    from station_map import StationMap
+    map = StationMap.get_dict()
+    dic = leftTicket_info('2018-07-08', map['北京'], map['石家庄'])
     print(len(dic))

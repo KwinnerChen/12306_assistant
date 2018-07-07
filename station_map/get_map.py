@@ -10,7 +10,7 @@ import os
 class StationMap(dict, object):
 
     '''
-       对象本身包含完整python字典功能。当获取一个车站名时，首先试图由对象本身获取，如果过不存在则优先加载本地文件再返回，
+       对象提供了类似python字典功能。当获取一个车站名时，首先试图由对象本身获取，如果过不存在则优先加载本地文件再返回，
        若本地文件也不存在，则先从网络获取，解析后返回目标值，并存储到本地已被后用。
        >>> map_dic = StationMap()  # 也可使用类方法get_dict()来获取对象StationMap.get_dict()
        >>> map_dic['北京'] = 'BJP'
@@ -19,6 +19,12 @@ class StationMap(dict, object):
     def __init__(self):
         super().__init__()
         self.file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'station_map.json')
+        try:
+            self.__load_dict()
+        except Exception:
+            string=self.__refresh_map()
+            self.__string_paser(string)
+            self.__storage_map()
 
     @classmethod
     def get_dict(cls):
@@ -53,19 +59,20 @@ class StationMap(dict, object):
         with open(self.file_path, 'w', encoding='utf-8') as f:
             json.dump(self, f)
 
-    def __getitem__(self, n):  # 获取目标key，已加载的且存在返回，否则加载本地文件，文件不存在更新
-        r = self.get(n)
-        if r:
-            return r
-        else:
-            if os.path.exists(self.file_path) and os.path.isfile(self.file_path) and os.path.getsize(self.file_path) > 0:
-                self.__load_dict()    
-                return self.get(n)
-            else:
-                string = self.__refresh_map()
-                self.__string_paser(string)
-                self.__storage_map()
-                return self.get(n)
+    # def __getitem__(self, n):  # 获取目标key，已加载的且存在返回，否则加载本地文件，文件不存在更新
+    #     r = self.get(n)
+    #     if r:
+    #         return r
+    #     else:
+    #         if os.path.exists(self.file_path) and os.path.isfile(self.file_path) and os.path.getsize(self.file_path) > 0:
+    #             self.__load_dict()    
+    #             return self.get(n)
+    #         else:
+    #             string = self.__refresh_map()
+    #             self.__string_paser(string)
+    #             self.__storage_map()
+    #             return self.get(n)
+
                 
 if __name__ == '__main__':
     map_dic = StationMap()
