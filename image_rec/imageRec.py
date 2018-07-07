@@ -3,7 +3,7 @@
 
 import requests, base64, json
 
-def recognize(image, access_token, flag='content'):
+def recognize(image, access_token, flag):
     '''
        返回图片识别结果的字典。
        参数解析：
@@ -38,8 +38,7 @@ def recognize(image, access_token, flag='content'):
     elif flag == 'position':
         resp = requests.post(url=base_url_p, params=payload, headers=header, data={'image':obj})
     resp.encoding = resp.apparent_encoding
-    jsn = resp.text
-    dic = json.loads(jsn)
+    dic = resp.json()
     return dic
 
 if __name__ == '__main__':
@@ -48,7 +47,7 @@ if __name__ == '__main__':
     sk = input('输入你的Secret Key：')
     file = input('需要识别的图片路径：')
     flag = input('识别类型（type：主题类型，content：内容，position：主体位置）：')
-    access_token = get_token(ak=ak,sk=sk)['access_token']
+    access_token = get_token(ak=ak,sk=sk, flag=flag)['access_token']
     dic = recognize(r'%s' % file, access_token, flag=flag)
     print(dic)
     input('按任意键退出！')
