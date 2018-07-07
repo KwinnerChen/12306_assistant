@@ -224,14 +224,14 @@ class PassengerOfTicket(object):
            ,_jc_save_toStation,_jc_save_wfdc_flag:dc, BIGipServerotn, BIGipServerpool_passport,
            JSESSIONID, RAIL_DEVICEID=dfp, RAIL_EXPIRATION=exp, route, tk'''
 
-            url = 'https://kyfw.12306.cn/otn/passcodeNew/getPassCodeNew?module=passenger&rand=randp&%s' % random.randomm()
-            try:
-               resp = self.session.get(url, headers=self.header, cookies=cookie)
-               resp.raise_for_status
-               current_captcha_type = resp.cookies.get_dict()['current_captcha_type']
-               return current_captcha_type
-            except Exception as e:
-                print('获取current_captcha_type出现错误：%s' % e)
+        url = 'https://kyfw.12306.cn/otn/passcodeNew/getPassCodeNew?module=passenger&rand=randp&{0}'
+        try:
+            resp = self.session.get(url, headers=self.header, cookies=cookie)
+            resp.raise_for_status
+            current_captcha_type = resp.cookies.get_dict()['current_captcha_type']
+            return current_captcha_type
+        except Exception as e:
+            print('获取current_captcha_type出现错误：%s' % e)
 
     def checkOrderInfo(self, cookie, passenger_info, token ):  # 请求重新设置了tk值
         '''请求cookie包括,_jc_save_fromDate(move time),_jc_save_fromStation(tuple,zn,en),_jc_save_toDate(today)
@@ -241,7 +241,7 @@ class PassengerOfTicket(object):
         url = 'https://kyfw.12306.cn/otn/confirmPassenger/checkOrderInfo'
         data = {
             '_json_att':'',
-            'bed_level_order_num':'000000000000000000000000000000'
+            'bed_level_order_num':'000000000000000000000000000000',
             'cancel_flag':'2',
             'oldPassengerStr':'%s,1,%s,,1_' % (passenger_info['passenger_name'], passenger_info['passenger_id_no']),
             'passengerTicketStr':'O,0,1,%s,1,%s,%s,N' % (passenger_info['passenger_name'], passenger_info['passenger_id_no'], passenger_info['mobile_no']),
@@ -262,7 +262,7 @@ class PassengerOfTicket(object):
         except Exception as e:
             print('__checkOrderInfo出现错误：%s' % e)
 
-    def getQueueCount(self, cookie, train_info, from_station, to_station, date, token)  # 获取选定车票余票信息 trian_info是一个二维字典{1：{1：2}} from_station, to_station拼音大写简写
+    def getQueueCount(self, cookie, train_info, from_station, to_station, date, token):  # 获取选定车票余票信息 trian_info是一个二维字典{1：{1：2}} from_station, to_station拼音大写简写
         '''请求cookie包括,_jc_save_fromDate(move time),_jc_save_fromStation(tuple,zn,en),_jc_save_toDate(today)
            ,_jc_save_toStation,_jc_save_wfdc_flag:dc, BIGipServerotn, BIGipServerpool_passport, current_captcha_type,
            JSESSIONID, RAIL_DEVICEID=dfp, RAIL_EXPIRATION=exp, route, tk'''
@@ -276,7 +276,7 @@ class PassengerOfTicket(object):
                 seatType = 'M'
         else:
             raise ValueError('目前只支持动车高铁的一等二等座自动订票')
-        date = {
+        data = {
             '_json_att':'',
             'fromStationTelecode':from_station,
             'leftTicket':train_tuple[1]['leftTicket'],
@@ -305,14 +305,14 @@ class PassengerOfTicket(object):
            JSESSIONID, RAIL_DEVICEID=dfp, RAIL_EXPIRATION=exp, route, tk
         '''
 
-        url = 'https://kyfw.12306.cn/otn/confirmPassenger/confirmSingleForQueue'
-        data = {
-            '_json_att':'',
-            'choose_seats':'',
-            'dwAll':'N',
-            'Key_check_isChange':''.join('%02X' % random.randint(0,255) for i in range(28)),
-            'leftTicketStr':train_info.popitem()[1]['leftTicket'],
-            'oldPassengerStr':'%s,1,%s,1_' % (passenger_info['passenger_name'], passenger_info['passenger_id_no']),
-            'passengerTicketStr':
-        }
+        # url = 'https://kyfw.12306.cn/otn/confirmPassenger/confirmSingleForQueue'
+        # data = {
+        #     '_json_att':'',
+        #     'choose_seats':'',
+        #     'dwAll':'N',
+        #     'Key_check_isChange':''.join('%02X' % random.randint(0,255) for i in range(28)),
+        #     'leftTicketStr':train_info.popitem()[1]['leftTicket'],
+        #     'oldPassengerStr':'%s,1,%s,1_' % (passenger_info['passenger_name'], passenger_info['passenger_id_no']),
+            
+        # }
         pass
