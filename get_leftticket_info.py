@@ -7,7 +7,7 @@ import json
 
 url = 'https://kyfw.12306.cn/otn/leftTicket/query'
 
-def get_info_dict(date, from_station, to_station):  # 获取余票数据
+def __get_info_dict(date, from_station, to_station):  # 获取余票数据
     payload = {
         'leftTicketDTO.train_date':'%s' % date,
         'leftTicketDTO.from_station':'%s' % from_station,
@@ -22,7 +22,7 @@ def get_info_dict(date, from_station, to_station):  # 获取余票数据
     dic = json.loads(jsn)
     return dic
 
-def page_dict(dic):  # 余票数据解析
+def __page_dict(dic):  # 余票数据解析
     dic_info = dict()
     l = dic.get('data').get('result')
     for s in l:
@@ -42,8 +42,8 @@ def leftTicket_info(date, from_station, to_station):
        to_station: 与from_station格式相同。
     '''
 
-    dic = get_info_dict(date, from_station, to_station)
-    info = page_dict(dic)
+    dic = __get_info_dict(date, from_station, to_station)
+    info = __page_dict(dic)
     return info
     
 

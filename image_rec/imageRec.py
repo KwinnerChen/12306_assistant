@@ -1,6 +1,7 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+from .tokens.get_tokens import get_token
 import requests, base64, json
 
 def recognize(image, access_token, flag):
@@ -42,7 +43,6 @@ def recognize(image, access_token, flag):
     return dic
 
 if __name__ == '__main__':
-    from .tokens.get_tokens import get_token
     ak = input('输入你的API Key：')
     sk = input('输入你的Secret Key：')
     file = input('需要识别的图片路径：')
