@@ -7,7 +7,7 @@ try:
     from selenium.webdriver import Chrome, ChromeOptions
     from selenium.webdriver.common.keys import Keys
 except ImportError:
-    raise ImportError('您应该没有安装selenium或者Friefox驱动...\n请检查安装后再次执行。') 
+    raise ImportError('您应该没有安装selenium或者Chrome驱动...\n请检查安装后再次执行。') 
 from datetime import datetime
 import time   
 
