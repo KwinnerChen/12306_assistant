@@ -63,7 +63,7 @@ class Browser():
                 raise TimeoutError('网络貌似有点问题...T_T\n也可能是element id改变了。。。')
             time.sleep(1)
 
-        element_fs.click()
+        element_fs.clear()
         element_fs.send_keys(from_station)
         element_fs.send_keys(Keys.ENTER)
         element_ts.clear()
