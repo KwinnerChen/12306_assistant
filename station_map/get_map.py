@@ -5,6 +5,7 @@
 import requests 
 import json 
 import os
+import time
 
 
 class StationMap(dict, object):
@@ -22,9 +23,11 @@ class StationMap(dict, object):
         try:
             self.__load_dict()
         except Exception:
+            print('由于地图不存在或本地地图已超时，现在跟新本地地图...')
             string=self.__refresh_map()
             self.__string_paser(string)
             self.__storage_map()
+
 
     @classmethod
     def get_dict(cls):
@@ -33,10 +36,14 @@ class StationMap(dict, object):
         return cls()
 
     def __load_dict(self):  # 由本地文件加载到对象本身
-        with open(self.file_path, 'r', encoding='utf-8') as f:
-            dic = json.load(f)
-            self.update(dic)
-            return self
+        if time.time() - os.path.getmtime(self.file_path) < 2592000:
+            with open(self.file_path, 'r', encoding='utf-8') as f:
+                dic = json.load(f)
+                self.update(dic)
+                return self
+        else:
+            raise TimeoutError
+
 
     def __refresh_map(self):  # 从网络获取地图字符串
         url = 'https://kyfw.12306.cn/otn/resources/js/framework/station_name.js?station_version=1.9056'
@@ -49,12 +56,14 @@ class StationMap(dict, object):
         except requests.HTTPError as e:
             print('跟新车站地图时出错，信息时%s!' % e)
 
+
     def __string_paser(self, string):  # 解析字典字符串，并加载到对象本身
         for i in string.split('@')[1:]:
             l_i = i.split('|')
             self[l_i[1]] = l_i[2]
         return self
-        
+
+
     def __storage_map(self):  # 将对象本身存储到本地，已被后用
         with open(self.file_path, 'w', encoding='utf-8') as f:
             json.dump(self, f)
@@ -72,8 +81,3 @@ class StationMap(dict, object):
     #             self.__string_paser(string)
     #             self.__storage_map()
     #             return self.get(n)
-
-                
-if __name__ == '__main__':
-    map_dic = StationMap()
-    print(map_dic['北京'])

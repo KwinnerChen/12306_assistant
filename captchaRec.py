@@ -15,7 +15,7 @@ import os, _io
 url = 'http://littlebigluo.qicp.net:47720/'
 
 def __rec(im_path): 
-    '''接受一个图片路径或者一个以二进制打开的文件句柄或者一个二进制字符串'''
+    '''接受一个图片路径或者一个以二进制打开的文件句柄或者一个bytes对象'''
     
     if isinstance(im_path, str):
         if os.path.isfile(im_path):
@@ -42,11 +42,13 @@ def __rec(im_path):
     else:
         raise TypeError('''接受一个图片路径或者一个以二进制打开的文件句柄或者一个二进制字符串。''')
 
+
 def __page_parser(page):
     tree = etree.HTML(page)
     string = tree.xpath('//b/text()')[0]
     result = tuple(string.split(' '))
     return result
+
 
 def __rec_parser(result):
     a = (40 + random.choice((-1,1))*random.randint(1,5), 40 + random.choice((-1,1))*random.randint(1,5))
@@ -65,17 +67,18 @@ def __rec_parser(result):
             answer.extend(b)
         elif i is '3':
             answer.extend(c)
-        elif i in '4':
+        elif i is '4':
             answer.extend(d)
-        elif i in '5':
+        elif i is '5':
             answer.extend(e)
-        elif i in '6':
+        elif i is '6':
             answer.extend(f)
-        elif i in '7':
+        elif i is '7':
             answer.extend(g)
-        elif i in '8':
+        elif i is '8':
             answer.extend(h)
     return ','.join(map(str,answer))
+
 
 def rec_run(im_path):
     '''接受一个图片路径或者一个以二进制打开的文件句柄或者一个二进制字符串'''
@@ -84,14 +87,8 @@ def rec_run(im_path):
     answer = __rec_parser(result)
     return answer
 
+
 if __name__ == '__main__':
-    # from io import BytesIO
-    # f = open(r'C:\Users\kkche\Pictures\12306\captcha-image2.jpg', 'rb')
-    # r = rec_run(f)
-    # resp = requests.get('https://kyfw.12306.cn/passport/captcha/captcha-image?login_site=E&module=login&rand=sjrand')
-    # print(resp.status_code)
-    # b = resp.content
-    # r = rec_run(b)
     while True:
         temp = input('输入要识别的图片（可以是路径，打开的文件句柄，或者图片的byte对象，q退出。）：')
         if temp == 'q':
