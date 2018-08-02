@@ -4,15 +4,17 @@
 
 
 from lxml import etree
+from base64 import b64decode
 import requests
 import random
-import os, _io
+import os
+import _io
 
 
 '''提供了在线的对12306验证码的解析，返回的是一个符合12306post参数标准的字符串'''
 
-
-url = 'http://littlebigluo.qicp.net:47720/'
+str_b = b64decode(b'aHR0cDovL2xpdHRsZWJpZ2x1by5xaWNwLm5ldDo0NzcyMC8=')
+url = str_b.decode('utf-8')
 
 def __rec(im_path): 
     '''接受一个图片路径或者一个以二进制打开的文件句柄或者一个bytes对象'''

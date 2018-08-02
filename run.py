@@ -10,23 +10,16 @@ import time, random
 
 
 if __name__ == '__main__':
-    # username = input('12306账户名：')
-    # password = input('12306账户密码：')
-    # from_station = input('始发站：')
-    # to_station = input('到达站：')
-    # date = input('出发日期：')
-    username = 'kkchen@msn.cn'
-    password = 'KaiChen880326'
-    from_station = '北京'
-    to_station = '石家庄'
-    date = '2018-07-30'
+    username = input('12306账户名：')
+    password = input('12306账户密码：')
+    from_station = input('始发站：')
+    to_station = input('到达站：')
+    date = input('出发日期：')
+    
 
     simulator = BookingSimulator(username, password, from_station, to_station, date)
-    browser = Browser()  # 通过Selenium驱动浏览器获取设备信息
+    browser = Browser()  # 通过Selenium驱动浏览器获取设备信息 
     
-    # train_num = input('选择的车次：')  
-    # # seatType = input('选择的座位类型（特等商务：9，一等：M，二等：O，软卧：4，硬卧：3，软座：2，硬座：1）：') 
-    # seatType = 'O'
     
     print('与服务器创建会话...\n')
     browser.init()
@@ -57,6 +50,7 @@ if __name__ == '__main__':
     seatType = input('选择的座位类型（特等商务：9，一等：M，二等：O，软卧：4，硬卧：3，软座：2，硬座：1）：')
     train_info = train[train_num]
 
+
     print('检查登陆状态...')
     cookie_for_user = {
         '_jc_save_fromDate':simulator._jc_save_fromdate,
@@ -71,6 +65,7 @@ if __name__ == '__main__':
         'route':route,
     }
     simulator.checkUser(cookie_for_user)
+
 
     # 识别验证码失败反复获取识别
     while True:
@@ -92,8 +87,10 @@ if __name__ == '__main__':
         _passport_ct = cookie['_passport_ct']
         _passport_session = cookie['_passport_session']
 
+
         print('识别验证码...\n')
         answer = rec_run(im)
+
 
         print('发送识别结果...\n')
         # 用于验证码校验的cookie
@@ -113,11 +110,13 @@ if __name__ == '__main__':
         }
         if simulator.captcha_check(answer, cookie_3):
             break
+
     
     print('用户登陆...\n')
     # 用于用户登陆的cookie
     cookie_4 = cookie_3
     uamtk = simulator.login(cookie_4)
+
 
     print('获取tk...\n')
     # 用于uamtk的cookie
@@ -136,6 +135,7 @@ if __name__ == '__main__':
         'uamtk':uamtk,
     }
     tk = simulator.uamtk(cookie_5)
+
 
     print('发送tk到服务器...\n')
     # 用于uamauthclient的cookie
@@ -173,6 +173,7 @@ if __name__ == '__main__':
         'tk':tk
     }
     simulator.submitOrderRequest(train_info, cookie_7)
+
     
     print('获取token...\n')
     # 用于获取token的cookie
@@ -186,16 +187,19 @@ if __name__ == '__main__':
     dtos = simulator.getPassengerDTOs(cookie_9, token)
     for p in dtos:
         print(p['passenger_name'], end='\t')
-    # p_n = input('请输入乘客名称：')
-    p_n = '陈凯'
+    print('\n')
+    p_n = input('请输入乘客名称：')
+    print('\n')
     for p in dtos:
         if p['passenger_name'] == p_n:
             passenger_info = p
+
     
     print('获取当前验证码类型...\n')
     cookie_10 = cookie_9
     current_captcha_type = simulator.getPassCodeNew(cookie_9)
     time.sleep(random.random()*3)
+
 
     print('检查命令详情...\n')
     # 用于checkorderinfo的cookie
@@ -215,17 +219,20 @@ if __name__ == '__main__':
         'tk':tk
     }
     new_tk = simulator.checkOrderInfo(seatType, cookie_11, passenger_info, token)
-    if new_tk:
+    if new_tk:  # 此处可能会有新的tk值
         print('new_tk=%s' % new_tk)
         cookie_11.update({'tk':new_tk})
+
     
     print('__getQueueCount 获取列队内容...\n')
     # cookie 与上部相同
     simulator.getQueueCount(seatType, train_num, train_info, token, cookie_11)
 
+
     print('确认信息列队...\n')
     # cookie与上部相同
     simulator.confirmSingleForQueue( passenger_info, train_info, seatType, token, key_check_isChange, cookie_11)
+
     
     print('确认订票信息...\n')
     # cookie与上步相同
