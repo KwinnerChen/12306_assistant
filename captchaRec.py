@@ -28,8 +28,8 @@ def __rec(im_path):
                 html = resp.text
                 return html
         else:
-            raise TypeError('''接受一个图片路径或者一个以二进制打开的文件句柄或者一个二进制字符串''')
-    elif isinstance(im_path, _io._BufferedIOBase):
+            raise TypeError('''接受一个图片路径或者一个以二进制打开的文件句柄或者一个bytes对象''')
+    elif isinstance(im_path, _io._BufferedReader):
         file = {'file':im_path}
         resp = requests.post(url, files=file)
         resp.raise_for_status
@@ -42,7 +42,7 @@ def __rec(im_path):
         html = resp.text
         return html
     else:
-        raise TypeError('''接受一个图片路径或者一个以二进制打开的文件句柄或者一个二进制字符串。''')
+        raise TypeError('''接受一个图片路径或者一个以二进制打开的文件句柄或者一个bytes对象。''')
 
 
 def __page_parser(page):
@@ -83,7 +83,7 @@ def __rec_parser(result):
 
 
 def rec_run(im_path):
-    '''接受一个图片路径或者一个以二进制打开的文件句柄或者一个二进制字符串'''
+    '''接受一个图片路径或者一个以二进制打开的文件句柄或者一个bytes对象'''
     page = __rec(im_path)
     result = __page_parser(page)
     answer = __rec_parser(result)
@@ -92,7 +92,7 @@ def rec_run(im_path):
 
 if __name__ == '__main__':
     while True:
-        temp = input('输入要识别的图片（可以是路径，打开的文件句柄，或者图片的byte对象，q退出。）：')
+        temp = input('输入要识别的图片（图片路径）：')
         if temp == 'q':
             break
         r = rec_run(temp)
